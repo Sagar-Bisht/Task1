@@ -3,6 +3,7 @@ package com.example.android.task1
 import android.annotation.SuppressLint
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
@@ -28,12 +29,13 @@ class MainActivity : AppCompatActivity(), MyAdapter.MYClickListener, MyAdapter3.
         recView2 = findViewById(R.id.recView2)
         recView3 = findViewById(R.id.recView3)
 
+        recView3.visibility = View.INVISIBLE
+
         data.add(User("A", false))
         data.add(User("B", false))
         data.add(User("C", false))
         data.add(User("D", false))
         data.add(User("E", false))
-
 
         data3.add(User("a", false))
         data3.add(User("b", false))
@@ -43,40 +45,54 @@ class MainActivity : AppCompatActivity(), MyAdapter.MYClickListener, MyAdapter3.
 
         //recView.layoutManager = LinearLayoutManager(this,LinearLayoutManager.HORIZONTAL,false)
 
-        recView.layoutManager = LinearLayoutManager(this)
-        myAdapter = MyAdapter(this, data, this)
-        recView.adapter = myAdapter
+        setRecView ()
 
+        setRecView2()
+
+        setRecView3()
+
+    }
+   private fun  setRecView(){
+       recView.layoutManager = LinearLayoutManager(this)
+       myAdapter = MyAdapter(this, data, this)
+       recView.adapter = myAdapter
+    }
+
+    private fun setRecView2(){
         recView2.layoutManager = LinearLayoutManager(this)
         myAdapter2 = MyAdapter2(this, data2)
         recView2.adapter = myAdapter2
-
+    }
+    private fun setRecView3(){
         recView3.layoutManager = LinearLayoutManager(this)
         myAdapter3 = MyAdapter3(this, data3, this)
         recView3.adapter = myAdapter3
-
     }
 
     // adding item to recycler view 2 from recycler view one
     @SuppressLint("NotifyDataSetChanged")
     override fun onClick(position: Int, checkBox: Boolean) {
+        recView3.visibility = View.VISIBLE
         if (checkBox) {
             data2.add(data[position])
+            setRecView3()
             myAdapter2.notifyDataSetChanged()
         } else {
+            recView3.visibility = View.INVISIBLE
             data2.remove(data[position])
+            data2.removeAll(data3)
+        }
+        myAdapter3.notifyDataSetChanged()
+        myAdapter2.notifyDataSetChanged()
+    }
+
+    override fun onClick3(position: Int, checkBox3: Boolean ) {
+        if(checkBox3){
+            data2.add(data3[position])
+            myAdapter2.notifyDataSetChanged()
+        }else{
+            data2.remove(data3[position])
             myAdapter2.notifyDataSetChanged()
         }
     }
-
-    override fun onClick3(position: Int, checkBox3: Boolean) {
-     if(checkBox3){
-         data2.add(data3[position])
-         myAdapter2.notifyDataSetChanged()
-     }else{
-         data2.remove(data3[position])
-         myAdapter2.notifyDataSetChanged()
-     }
-    }
-
 }
